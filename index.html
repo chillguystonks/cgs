@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGS Token</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .page-wrapper {
+            position: relative;
+            z-index: 2;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .transaction {
+            position: absolute;
+            color: #1945ac;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            animation: fallDown 3s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes fallDown {
+            0% {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            backdrop-filter: blur(5px);
+            margin: 2rem auto;
+        }
+
+        .logo-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 3rem;
+            position: relative;
+            border-radius: 50%;
+            background: #000;
+            padding: 3px;
+            box-shadow: 0 0 30px #1945ac;
+        }
+
+        .logo-circle::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #1945ac, #1945ac);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.5;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .logo-inner {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid #1945ac;
+        }
+
+        .logo {
+            width: 110%;
+            height: 110%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 10px #1945ac);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .bio {
+            font-size: 2.5rem;
+            margin: 2rem 0;
+            color: #1945ac;
+            font-weight: bold;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-box {
+            background: rgba(25, 69, 172, 0.1);
+            border: 1px solid #1945ac;
+            border-radius: 15px;
+            padding: 1.5rem;
+            min-width: 200px;
+            box-shadow: 0 0 20px rgba(25, 69, 172, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                rgba(25, 69, 172, 0.1),
+                transparent,
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .stat-title {
+            font-size: 1.2rem;
+            color: #1945ac;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px #1945ac;
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { text-shadow: 0 0 10px #1945ac; }
+            50% { text-shadow: 0 0 20px #1945ac, 0 0 30px #1945ac; }
+        }
+
+        .contract-box {
+            background: rgba(25, 69, 172, 0.05);
+            border: 1px solid #1945ac;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem auto;
+            max-width: 600px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .social-button {
+            background: #000;
+            color: #1945ac;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            border: 1px solid #1945ac;
+            box-shadow: 0 0 20px rgba(25, 69, 172, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-button:hover {
+            background: #1945ac;
+            color: #000;
+            transform: translateY(-5px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+
+            .logo-circle {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .bio {
+                font-size: 1.8rem;
+            }
+
+            .social-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats-container {
+                gap: 1rem;
+            }
+
+            .stat-box {
+                min-width: 100%;
+            }
+
+            .stat-value {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createTransaction() {
+            const transactions = [
+                "HZxK...j92m Buy 2.5 SOL 🟢",
+                "Nk4P...v63n Sell 1.2 SOL 🔴",
+                "W7bR...t15p Buy 3.8 SOL 🟢",
+                "L9mS...h47q Buy 0.7 SOL 🟢",
+                "Y2dX...c84w Sell 2.1 SOL 🔴",
+                "Transfer: 5000 CGP 🚀",
+                "Liquidity Added: 10 SOL 💧",
+                "New Holder: Ax8n... 💎",
+                "Price: +18% 📈",
+                "MCap: $450K 💰"
+            ];
+            
+            const tx = document.createElement('div');
+            tx.className = 'transaction';
+            tx.textContent = transactions[Math.floor(Math.random() * transactions.length)];
+            tx.style.left = Math.random() * 100 + 'vw';
+            tx.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            document.querySelector('.matrix-bg').appendChild(tx);
+            
+            setTimeout(() => {
+                tx.remove();
+            }, 5000);
+        }
+
+        setInterval(createTransaction, 100);
+    </script>
+
+    <div class="matrix-bg"></div>
+    <div class="page-wrapper">
+        <div class="container">
+            <div class="logo-circle">
+                <div class="logo-inner">
+                    <img src="https://i.ibb.co/bNQbDfs/LogoCGP.png" alt="CGP Token" class="logo">
+                </div>
+            </div>
+            
+            <div class="bio">
+                Chill Guy Stonks 🚀
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <div class="stat-title">💎 HOLDERS</div>
+                    <div class="stat-value">∞</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">💰 MARKET CAP</div>
+                    <div class="stat-value">∞</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">📈 24H VOLUME</div>
+                    <div class="stat-value">∞</div>
+                </div>
+            </div>
+
+            <div class="contract-box">
+                <div class="stat-title">🔥 CONTRACT ADDRESS</div>
+                <div class="contract-address" style="margin-top: 1rem; color: #fff;">
+                    33p8QUyptV9zGnWFrSZNEqC6LtqYqnvXBrUGneXQpump
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="https://t.me/chillguystonks" class="social-button">
+                    💬 JOIN 99,999+ DEGENS ON TELEGRAM
+                </a>
+                <a href="https://x.com/ChillGuyStonks" class="social-button">
+                    🐦 FOLLOW THE PUMP ON TWITTER
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
